@@ -1,0 +1,5 @@
+Order Date|Model|Price|Quantity
+9-15-2021|iPhone|$799|5
+6-15-2021|Galaxy|$899|4
+11-28-2020|Pixel|$699|8
+12-25-2020|iPhone|$899|1
