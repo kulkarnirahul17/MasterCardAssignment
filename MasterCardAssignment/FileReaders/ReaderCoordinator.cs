@@ -11,11 +11,14 @@ namespace MasterCardAssignment.FileReaders
             List<OrderInfo> orderInfos = new();
             OrderInputReader reader = new();            
 
-            string csvFilePath = "Resources/comma.csv";
+            string csvFilePath = @"comma.csv";
             orderInfos.AddRange(reader.ReadInput(csvFilePath, ','));
              
-            string pipedFilePath = "Resources/pipe.txt";
+            string pipedFilePath = @"pipe.txt";
             orderInfos.AddRange(reader.ReadInput(pipedFilePath, '|'));
+
+            string spaceDelimitedFilePath = @"space.dat";
+            orderInfos.AddRange(reader.ReadInput(spaceDelimitedFilePath, ' '));
 
             return orderInfos;
         }

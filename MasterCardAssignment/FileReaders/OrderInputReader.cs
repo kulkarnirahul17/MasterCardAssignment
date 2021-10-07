@@ -33,7 +33,8 @@ namespace MasterCardAssignment.FileReaders
 
                         DateTime.TryParse(words[0], out DateTime orderDate);
                         string model = words[1];
-                        decimal.TryParse(words[2], out decimal price);
+                        //Ignore first character because it contains $ symbol
+                        decimal.TryParse(words[2][1..], out decimal price);                        
                         int.TryParse(words[3], out int quantity);
                         orderInfos.Add(new OrderInfo(orderDate, model, price, quantity));
                     }

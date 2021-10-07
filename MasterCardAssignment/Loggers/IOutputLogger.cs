@@ -7,6 +7,8 @@ namespace MasterCardAssignment.Loggers
 {
     public interface IOutputLogger
     {
-        Task LogOrdersAsync(IEnumerable<OrderInfo> orderInfos);
+        void LogOrders(IEnumerable<OrderInfo> orderInfos);
+        void LogSalesByModel(Dictionary<string, decimal> salesByModel);
+        void LogSalesByYearThenPrice(IEnumerable<OrderInfo> orderInfos);
     }
 }

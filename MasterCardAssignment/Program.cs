@@ -18,7 +18,15 @@ namespace MasterCardAssignment
 
             //Sort by Order Date
             IOutputLogger logger = new FileOutputLogger(exceptionLogger);
-            logger.LogOrdersAsync(sortedByDate);
+            logger.LogOrders(sortedByDate);
+
+            //Get sales by model
+            var salesByModel = business.GetSalesByModel(orderInfos);
+            logger.LogSalesByModel(salesByModel);
+
+            //Log sales by year asc then price desc
+            var salesByYearAscThenPriceDesc = business.SortOrdersByYearThenPrice(orderInfos);
+            logger.LogSalesByYearThenPrice(salesByYearAscThenPriceDesc);
             
         }
     }

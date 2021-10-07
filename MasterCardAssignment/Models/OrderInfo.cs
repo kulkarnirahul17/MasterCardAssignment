@@ -17,5 +17,11 @@ namespace MasterCardAssignment.Models
         public int Quantity { get; set; }
         public decimal Sales => (Price * Quantity);
 
+        public override string ToString()
+        {
+            //shorthand for ToString("0.00") to place .00 after decimals
+            return $"{OrderDate.ToShortDateString()} {Model} ${Price:#,##0.00} {Quantity} ${Sales:#,##0.00}"; 
+        }
+
     }
 }
