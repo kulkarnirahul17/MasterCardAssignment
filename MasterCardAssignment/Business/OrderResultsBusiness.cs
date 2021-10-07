@@ -7,11 +7,21 @@ namespace MasterCardAssignment.Business
 {
     public class OrderResultsBusiness : IOrderResultsBusiness
     {
+        /// <summary>
+        /// Sorts the orders by order date descending
+        /// </summary>
+        /// <param name="orderInfos">The order info list that needs to be sorted</param>
+        /// <returns>Orders sorted by the respective criteria</returns>
         public IEnumerable<OrderInfo> SorOrdersByDate(IEnumerable<OrderInfo> orderInfos)
         {
             return orderInfos.OrderByDescending(x => x.OrderDate);
         }
 
+        /// <summary>
+        /// Sorts the orders by top grossing models first
+        /// </summary>
+        /// <param name="orderInfos">The order info list that needs to be sorted</param>
+        /// <returns>Orders sorted by the respective criteria</returns>
         public Dictionary<string, decimal> GetSalesByModel(IEnumerable<OrderInfo> orderInfos)
         {
             Dictionary<string, decimal> result = new();
@@ -28,6 +38,12 @@ namespace MasterCardAssignment.Business
             }
             return result;
         }
+
+        /// <summary>
+        /// Sorts the orders sorted by year of order date first and then price descending and then by month descending
+        /// </summary>
+        /// <param name="orderInfos">The order info list that needs to be sorted</param>
+        /// <returns>Orders sorted by the respective criteria</returns>
 
         public IEnumerable<OrderInfo> SortOrdersByYearThenPrice(IEnumerable<OrderInfo> orderInfos)
         {

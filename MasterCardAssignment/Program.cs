@@ -12,7 +12,7 @@ namespace MasterCardAssignment
             IExceptionLogger exceptionLogger = new ConsoleExceptionLogger();
             //Read the input
             IReaderCoordinator readerCoordinator = new ReaderCoordinator();
-            var orderInfos = readerCoordinator.ReadInput();
+            var orderInfos = readerCoordinator.AggregateInputFiles();
             IOrderResultsBusiness business = new OrderResultsBusiness();
             var sortedByDate = business.SorOrdersByDate(orderInfos);
 
@@ -20,7 +20,7 @@ namespace MasterCardAssignment
             IOutputLogger logger = new FileOutputLogger(exceptionLogger);
             logger.LogOrders(sortedByDate);
 
-            //Get sales by model
+            //Get sales by top grossing models
             var salesByModel = business.GetSalesByModel(orderInfos);
             logger.LogSalesByModel(salesByModel);
 
