@@ -9,6 +9,13 @@ namespace MasterCardAssignment.FileReaders
     /// </summary>
     public class ReaderCoordinator : IReaderCoordinator
     {
+        private readonly IInputReader _reader;
+
+        public ReaderCoordinator(IInputReader reader)
+        {
+            _reader = reader;
+        }
+
         /// <summary>
         /// Combines the results of multiple input files into an Enumerable representation of order info objects
         /// </summary>
@@ -16,17 +23,16 @@ namespace MasterCardAssignment.FileReaders
         /// <see cref="OrderInfo"/>
         public IEnumerable<OrderInfo> AggregateInputFiles()
         {
-            List<OrderInfo> orderInfos = new();
-            OrderInputReader reader = new();            
+            List<OrderInfo> orderInfos = new();          
+
+            string pipedFilePath = @"pipe.txt";
+            orderInfos.AddRange(_reader.ReadInput(pipedFilePath, '|'));
 
             string csvFilePath = @"comma.csv";
-            orderInfos.AddRange(reader.ReadInput(csvFilePath, ','));
-             
-            string pipedFilePath = @"pipe.txt";
-            orderInfos.AddRange(reader.ReadInput(pipedFilePath, '|'));
+            orderInfos.AddRange(_reader.ReadInput(csvFilePath, ','));                         
 
             string spaceDelimitedFilePath = @"space.dat";
-            orderInfos.AddRange(reader.ReadInput(spaceDelimitedFilePath, ' '));
+            orderInfos.AddRange(_reader.ReadInput(spaceDelimitedFilePath, ' '));
 
             return orderInfos;
         }

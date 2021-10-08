@@ -2,7 +2,7 @@
 namespace MasterCardAssignment.Loggers
 {
     /// <summary>
-    /// Defines the method signature for logging exception
+    /// Defines the method signatures for logging exception
     /// </summary>
     public interface IExceptionLogger
     {

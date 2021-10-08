@@ -43,7 +43,7 @@ namespace MasterCardAssignment.Loggers
             }
         }
 
-        public void LogSalesByModel(Dictionary<string, decimal> salesByModel)
+        public void LogSalesByModel(IOrderedEnumerable<KeyValuePair<string, decimal>> salesByModel)
         {
             StreamWriter file = null;
             try

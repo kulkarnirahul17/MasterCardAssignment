@@ -10,12 +10,14 @@
     <None Remove="Business\" />
     <None Remove="FileReader\" />
     <None Remove="Loggers\" />
+    <None Remove="Business\Comparers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Business\" />
     <Folder Include="FileReaders\" />
     <Folder Include="Loggers\" />
+    <Folder Include="Business\Comparers\" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Resources\comma.csv">

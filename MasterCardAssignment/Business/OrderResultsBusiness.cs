@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MasterCardAssignment.Models;
 using System.Linq;
+using MasterCardAssignment.Business.Comparers;
 
 namespace MasterCardAssignment.Business
 {
@@ -14,7 +15,9 @@ namespace MasterCardAssignment.Business
         /// <returns>Orders sorted by the respective criteria</returns>
         public IEnumerable<OrderInfo> SorOrdersByDate(IEnumerable<OrderInfo> orderInfos)
         {
-            return orderInfos.OrderByDescending(x => x.OrderDate);
+            var itemsToSort = orderInfos.ToArray();
+            OrderSorter.QuickSort(itemsToSort, new OrderDateReverseComparer());
+            return itemsToSort.AsEnumerable();
         }
 
         /// <summary>
@@ -22,7 +25,7 @@ namespace MasterCardAssignment.Business
         /// </summary>
         /// <param name="orderInfos">The order info list that needs to be sorted</param>
         /// <returns>Orders sorted by the respective criteria</returns>
-        public Dictionary<string, decimal> GetSalesByModel(IEnumerable<OrderInfo> orderInfos)
+        public IOrderedEnumerable<KeyValuePair<string, decimal>> GetSalesByModel(IEnumerable<OrderInfo> orderInfos)
         {
             Dictionary<string, decimal> result = new();
             foreach (var order in orderInfos ?? Enumerable.Empty<OrderInfo>())
@@ -36,21 +39,23 @@ namespace MasterCardAssignment.Business
                     result.Add(order.Model, order.Sales);
                 }
             }
-            return result;
+
+            return result.OrderBy(x => x, new OrderModelSalesPairComparator());
         }
 
         /// <summary>
-        /// Sorts the orders sorted by year of order date first and then price descending and then by month descending
+        /// Sorts the orders sorted by year of order date first and then price descending and
         /// </summary>
         /// <param name="orderInfos">The order info list that needs to be sorted</param>
         /// <returns>Orders sorted by the respective criteria</returns>
 
         public IEnumerable<OrderInfo> SortOrdersByYearThenPrice(IEnumerable<OrderInfo> orderInfos)
         {
-            return orderInfos.OrderBy(x => x.OrderDate.Year)
-                .ThenByDescending(x => x.Price)
-                .ThenByDescending(x => x.OrderDate.Month)
+            //Using ThenBy and not ThenByDescending becuase the comparer already compares in decreasing order
+            return orderInfos.OrderBy(x => x, new OrderYearComparer())
+                .ThenBy(x => x, new OrderPriceDescendingComparer())
                 ;
-        }
+        }        
+       
     }
 }

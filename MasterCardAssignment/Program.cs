@@ -14,7 +14,7 @@ namespace MasterCardAssignment
             IReaderCoordinator readerCoordinator = new ReaderCoordinator();
             var orderInfos = readerCoordinator.AggregateInputFiles();
             IOrderResultsBusiness business = new OrderResultsBusiness();
-            var sortedByDate = business.SorOrdersByDate(orderInfos);
+            var sortedByDate = business.CustomSortedOrdersByDate(orderInfos);
 
             //Sort by Order Date
             IOutputLogger logger = new FileOutputLogger(exceptionLogger);
