@@ -14,7 +14,7 @@
 [AutoFixture]: <https://github.com/AutoFixture/AutoFixture>
 
 ## _Build and Run_
-- To build the project, open a shell or terminal window, navigate to the root project where MasterCardAssignment.csproj file is located and execute
+- To build the project, open a shell or terminal window, navigate to the root project where MasterCardAssignment.csproj file is located and execute the following
 
 ```sh
 >MasterCardAssignment: dotnet build
