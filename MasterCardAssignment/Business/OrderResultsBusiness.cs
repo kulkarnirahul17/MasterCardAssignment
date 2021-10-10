@@ -6,6 +6,9 @@ using MasterCardAssignment.Business.Comparers;
 
 namespace MasterCardAssignment.Business
 {
+    /// <summary>
+    /// Business class of Order info objects which orders and sort them by specific criteria
+    /// </summary>
     public class OrderResultsBusiness : IOrderResultsBusiness
     {
         /// <summary>
@@ -15,6 +18,9 @@ namespace MasterCardAssignment.Business
         /// <returns>Orders sorted by the respective criteria</returns>
         public IEnumerable<OrderInfo> SorOrdersByDate(IEnumerable<OrderInfo> orderInfos)
         {
+            if (orderInfos == null)
+                throw new ArgumentNullException(nameof(orderInfos));
+
             var itemsToSort = orderInfos.ToArray();
             OrderSorter.QuickSort(itemsToSort, new OrderDateReverseComparer());
             return itemsToSort.AsEnumerable();
@@ -27,6 +33,9 @@ namespace MasterCardAssignment.Business
         /// <returns>Orders sorted by the respective criteria</returns>
         public IOrderedEnumerable<KeyValuePair<string, decimal>> GetSalesByModel(IEnumerable<OrderInfo> orderInfos)
         {
+            if (orderInfos == null)
+                throw new ArgumentNullException(nameof(orderInfos));
+
             Dictionary<string, decimal> result = new();
             foreach (var order in orderInfos ?? Enumerable.Empty<OrderInfo>())
             {
@@ -51,6 +60,9 @@ namespace MasterCardAssignment.Business
 
         public IEnumerable<OrderInfo> SortOrdersByYearThenPrice(IEnumerable<OrderInfo> orderInfos)
         {
+            if (orderInfos == null)
+                throw new ArgumentNullException(nameof(orderInfos));
+
             //Using ThenBy and not ThenByDescending becuase the comparer already compares in decreasing order
             return orderInfos.OrderBy(x => x, new OrderYearComparer())
                 .ThenBy(x => x, new OrderPriceDescendingComparer())

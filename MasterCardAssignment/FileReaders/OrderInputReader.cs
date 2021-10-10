@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using MasterCardAssignment.Loggers;
 using MasterCardAssignment.Models;
 
 namespace MasterCardAssignment.FileReaders
@@ -11,6 +12,12 @@ namespace MasterCardAssignment.FileReaders
     /// </summary>
     public class OrderInputReader : IInputReader
     {
+        private readonly IExceptionLogger _exceptionLogger;
+
+        public OrderInputReader(IExceptionLogger exceptionLogger)
+        {
+            _exceptionLogger = exceptionLogger;
+        }
         /// <summary>
         /// Defines the methods to read the input orders from a file.
         /// </summary>
@@ -56,7 +63,8 @@ namespace MasterCardAssignment.FileReaders
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to read csv file: {filePath} with the following error {ex.Message}");
+                _exceptionLogger.LogException(ex);
+                throw;
             }
 
             return orderInfos;

@@ -20,6 +20,11 @@ namespace MasterCardAssignment.Loggers
 
         public void LogOrders(IEnumerable<OrderInfo> orderInfos)
         {
+            if (orderInfos is null)
+            {
+                throw new ArgumentNullException(nameof(orderInfos));
+            }
+
             StreamWriter file = null;
             try
             {

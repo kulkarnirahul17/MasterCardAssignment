@@ -9,25 +9,22 @@ namespace MasterCardAssignment
     {
         static void Main(string[] args)
         {
+            //Not using any DI containers for this solution, but we can simulate constructor injection.
             IExceptionLogger exceptionLogger = new ConsoleExceptionLogger();
-            //Read the input
-            IReaderCoordinator readerCoordinator = new ReaderCoordinator();
-            var orderInfos = readerCoordinator.AggregateInputFiles();
-            IOrderResultsBusiness business = new OrderResultsBusiness();
-            var sortedByDate = business.CustomSortedOrdersByDate(orderInfos);
-
-            //Sort by Order Date
+            IInputReader inputReader = new OrderInputReader(exceptionLogger);
+            IReaderCoordinator readerCoordinator = new ReaderCoordinator(inputReader, exceptionLogger);
             IOutputLogger logger = new FileOutputLogger(exceptionLogger);
-            logger.LogOrders(sortedByDate);
+            IOrderResultsBusiness business = new OrderResultsBusiness();
 
-            //Get sales by top grossing models
-            var salesByModel = business.GetSalesByModel(orderInfos);
-            logger.LogSalesByModel(salesByModel);
-
-            //Log sales by year asc then price desc
-            var salesByYearAscThenPriceDesc = business.SortOrdersByYearThenPrice(orderInfos);
-            logger.LogSalesByYearThenPrice(salesByYearAscThenPriceDesc);
+            IOrderMerger orderMerger = new OrderMerger(readerCoordinator, logger, business);
             
+
+            orderMerger.ReadAndMergeOrders();
+
+            Console.WriteLine("Successfully written the output to output.txt");
+
         }
+
+       
     }
 }

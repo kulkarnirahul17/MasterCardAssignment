@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MasterCardAssignment.Loggers;
 using MasterCardAssignment.Models;
 
 namespace MasterCardAssignment.FileReaders
@@ -10,10 +11,12 @@ namespace MasterCardAssignment.FileReaders
     public class ReaderCoordinator : IReaderCoordinator
     {
         private readonly IInputReader _reader;
+        private readonly IExceptionLogger _exceptionLogger;
 
-        public ReaderCoordinator(IInputReader reader)
+        public ReaderCoordinator(IInputReader reader, IExceptionLogger exceptionLogger)
         {
             _reader = reader;
+            _exceptionLogger = exceptionLogger;            
         }
 
         /// <summary>
@@ -23,18 +26,30 @@ namespace MasterCardAssignment.FileReaders
         /// <see cref="OrderInfo"/>
         public IEnumerable<OrderInfo> AggregateInputFiles()
         {
-            List<OrderInfo> orderInfos = new();          
+            List<OrderInfo> orderInfos = new();
 
             string pipedFilePath = @"pipe.txt";
-            orderInfos.AddRange(_reader.ReadInput(pipedFilePath, '|'));
-
-            string csvFilePath = @"comma.csv";
-            orderInfos.AddRange(_reader.ReadInput(csvFilePath, ','));                         
+            readFile(orderInfos, pipedFilePath, '|');
 
             string spaceDelimitedFilePath = @"space.dat";
-            orderInfos.AddRange(_reader.ReadInput(spaceDelimitedFilePath, ' '));
+            readFile(orderInfos, spaceDelimitedFilePath, ' ');
+
+            string csvFilePath = @"comma.csv";
+            readFile(orderInfos, csvFilePath, ',');                      
 
             return orderInfos;
+        }
+
+        private void readFile(List<OrderInfo> orderInfos, string filePath, char delimiter)
+        {
+            try
+            {              
+                orderInfos.AddRange(_reader.ReadInput(filePath, delimiter));
+            }
+            catch (Exception ex)
+            {
+                _exceptionLogger.LogException(ex);
+            }
         }
     }
 }
