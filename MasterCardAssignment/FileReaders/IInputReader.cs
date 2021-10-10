@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MasterCardAssignment.Models;
 
 namespace MasterCardAssignment.FileReaders
@@ -15,6 +16,6 @@ namespace MasterCardAssignment.FileReaders
         /// <param name="filePath">The file containing input orders</param>
         /// <param name="delimiter">The delimter format of the file</param>
         /// <returns>An enumerable list of orders read from the file represented by <see cref="OrderInfo"/></returns>
-        IEnumerable<OrderInfo> ReadInput(string filePath, char delimiter);
+        Task<IEnumerable<OrderInfo>> ReadInputAsync(string filePath, char delimiter);
     }
 }

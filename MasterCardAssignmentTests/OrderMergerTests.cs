@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoFixture;
 using MasterCardAssignment.Business;
 using MasterCardAssignment.FileReaders;
@@ -32,7 +33,7 @@ namespace MasterCardAssignmentTests
              _sortedByDateDescOrders = _orderInfos.OrderByDescending(y => y.OrderDate.Year);
 
             _readerCoordinatorMock = new Mock<IReaderCoordinator>();
-            _readerCoordinatorMock.Setup(x => x.AggregateInputFiles()).Returns(_orderInfos);            
+            _readerCoordinatorMock.Setup(x => x.AggregateInputFilesAsync()).ReturnsAsync(_orderInfos);            
 
             _orderResultsBusinessMock = new Mock<IOrderResultsBusiness>();
             _orderResultsBusinessMock.Setup(x => x.SorOrdersByDate(_orderInfos)).Returns(_sortedByDateDescOrders);
@@ -44,24 +45,24 @@ namespace MasterCardAssignmentTests
         }
 
         [Fact]
-        public void ItShouldCallLogOrdersByDate()
+        public async Task ItShouldCallLogOrdersByDate()
         {
-            _orderMerger.ReadAndMergeOrders();
-            _outputLoggerMock.Verify(x => x.LogOrders(_sortedByDateDescOrders), Times.Once);
+            await _orderMerger.ReadAndMergeOrdersAsync();
+            _outputLoggerMock.Verify(x => x.LogOrdersAsync(_sortedByDateDescOrders), Times.Once);
         }
 
         [Fact]
-        public void ItShouldCallLogSalesByModel()
+        public async Task ItShouldCallLogSalesByModel()
         {
-            _orderMerger.ReadAndMergeOrders();
-            _outputLoggerMock.Verify(x => x.LogSalesByModel(_topGrossingByModelOrders), Times.Once);
+            await _orderMerger.ReadAndMergeOrdersAsync();
+            _outputLoggerMock.Verify(x => x.LogSalesByModelAsync(_topGrossingByModelOrders), Times.Once);
         }
 
         [Fact]
-        public void ItShouldCallLogSalesByYearThenPrice()
+        public async Task ItShouldCallLogSalesByYearThenPrice()
         {
-            _orderMerger.ReadAndMergeOrders();
-            _outputLoggerMock.Verify(x => x.LogSalesByYearThenPrice(_sortedByDateDescOrders), Times.Once);
+            await _orderMerger.ReadAndMergeOrdersAsync();
+            _outputLoggerMock.Verify(x => x.LogSalesByYearThenPriceAsync(_sortedByDateDescOrders), Times.Once);
         }
     }
 }

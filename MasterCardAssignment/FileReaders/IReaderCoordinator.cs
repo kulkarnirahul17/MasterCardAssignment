@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MasterCardAssignment.Models;
 
 namespace MasterCardAssignment.FileReaders
@@ -14,6 +15,6 @@ namespace MasterCardAssignment.FileReaders
         /// </summary>
         /// <returns>Aggregate list of merge order infos from multiple input sources</returns>
         /// <see cref="OrderInfo"/>
-        IEnumerable<OrderInfo> AggregateInputFiles();
+        Task<IEnumerable<OrderInfo>> AggregateInputFilesAsync();
     }
 }

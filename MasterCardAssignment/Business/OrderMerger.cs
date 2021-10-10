@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using MasterCardAssignment.FileReaders;
 using MasterCardAssignment.Loggers;
 
@@ -23,22 +24,22 @@ namespace MasterCardAssignment.Business
         /// <summary>
         /// Reads the orders from the input data sources and logs the merged results to output 
         /// </summary>
-        public void ReadAndMergeOrders()
+        public async Task ReadAndMergeOrdersAsync()
         {
             //Read the input
-            var orderInfos = _readerCoordinator.AggregateInputFiles();
+            var orderInfos = await _readerCoordinator.AggregateInputFilesAsync();
             
             //Sort by Order Date            
             var sortedByDate = _business.SorOrdersByDate(orderInfos);           
-            _logger.LogOrders(sortedByDate);
+            await _logger.LogOrdersAsync(sortedByDate);
 
             //Get sales by top grossing models
             var salesByModel = _business.GetSalesByModel(orderInfos);
-            _logger.LogSalesByModel(salesByModel);
+            await _logger.LogSalesByModelAsync(salesByModel);
 
             //Log sales by year asc then price desc
             var salesByYearAscThenPriceDesc = _business.SortOrdersByYearThenPrice(orderInfos);
-            _logger.LogSalesByYearThenPrice(salesByYearAscThenPriceDesc);
+            await _logger.LogSalesByYearThenPriceAsync(salesByYearAscThenPriceDesc);
         }       
     }
 }

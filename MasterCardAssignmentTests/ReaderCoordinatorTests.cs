@@ -8,6 +8,7 @@ using AutoFixture;
 using Xunit;
 using System.Linq;
 using MasterCardAssignment.Loggers;
+using System.Threading.Tasks;
 
 namespace MasterCardAssignmentTests
 {
@@ -32,28 +33,28 @@ namespace MasterCardAssignmentTests
             _inputReaderMock = new Mock<IInputReader>();
             _exceptionLoggerMock = new Mock<IExceptionLogger>();
 
-            _inputReaderMock.Setup(x => x.ReadInput(It.IsAny<string>(), '|')).Returns(_orderInfosPipe);
-            _inputReaderMock.Setup(x => x.ReadInput(It.IsAny<string>(), ',')).Returns(_orderInfosCsv);
-            _inputReaderMock.Setup(x => x.ReadInput(It.IsAny<string>(), ' ')).Returns(_orderInfosDat);
+            _inputReaderMock.Setup(x => x.ReadInputAsync(It.IsAny<string>(), '|')).ReturnsAsync(_orderInfosPipe);
+            _inputReaderMock.Setup(x => x.ReadInputAsync(It.IsAny<string>(), ',')).ReturnsAsync(_orderInfosCsv);
+            _inputReaderMock.Setup(x => x.ReadInputAsync(It.IsAny<string>(), ' ')).ReturnsAsync(_orderInfosDat);
 
             _coordinator = new ReaderCoordinator(_inputReaderMock.Object, _exceptionLoggerMock.Object);
         }
 
         [Fact]
-        public void ItShouldReadCombinedInputs()
+        public async Task ItShouldReadCombinedInputs()
         {
-            var result = _coordinator.AggregateInputFiles();
+            var result = await _coordinator.AggregateInputFilesAsync();
             result.ShouldContain(_orderInfosCsv.First());
             result.ShouldContain(_orderInfosPipe.First());
             result.ShouldContain(_orderInfosDat.First());
         }
 
         [Fact]
-        public void ItShouldSkipCsvIfReadingFails()
+        public async Task ItShouldSkipCsvIfReadingFails()
         {
-            _inputReaderMock.Setup(x => x.ReadInput(It.IsAny<string>(), ',')).Throws<Exception>();
+            _inputReaderMock.Setup(x => x.ReadInputAsync(It.IsAny<string>(), ',')).Throws<Exception>();
 
-            var result = _coordinator.AggregateInputFiles();
+            var result = await _coordinator.AggregateInputFilesAsync();
             result.Count().ShouldBe(2);
             result.ShouldNotContain(_orderInfosCsv.First());
             result.ShouldContain(_orderInfosPipe.First());
@@ -61,11 +62,11 @@ namespace MasterCardAssignmentTests
         }
 
         [Fact]
-        public void ItShouldLogExceptionIfAnyFileReadingFails()
+        public async Task ItShouldLogExceptionIfAnyFileReadingFails()
         {
             var exMessage = _fixture.Create<string>();
-            _inputReaderMock.Setup(x => x.ReadInput(It.IsAny<string>(), '|')).Throws(new Exception(exMessage));            
-            _coordinator.AggregateInputFiles();
+            _inputReaderMock.Setup(x => x.ReadInputAsync(It.IsAny<string>(), '|')).Throws(new Exception(exMessage));            
+            await _coordinator.AggregateInputFilesAsync();
             _exceptionLoggerMock.Verify(x => x.LogException(It.Is<Exception>(ex => ex.Message == exMessage)), Times.Once);
         }       
     }

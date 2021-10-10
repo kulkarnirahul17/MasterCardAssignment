@@ -18,7 +18,7 @@ namespace MasterCardAssignment.Loggers
             _exceptionLogger = exceptionLogger;
         }
 
-        public void LogOrders(IEnumerable<OrderInfo> orderInfos)
+        public async Task LogOrdersAsync(IEnumerable<OrderInfo> orderInfos)
         {
             if (orderInfos is null)
             {
@@ -32,9 +32,9 @@ namespace MasterCardAssignment.Loggers
                 file.WriteLine("Order Date Model Price Quantity Sales");
                 foreach (var order in orderInfos ?? Enumerable.Empty<OrderInfo>())
                 {
-                    file.WriteLine(order.ToString());
+                    await file.WriteLineAsync(order.ToString());
                 }
-                file.WriteLine(string.Empty);
+                await file.WriteLineAsync(string.Empty);
 
             }
             catch (Exception ex)
@@ -48,7 +48,7 @@ namespace MasterCardAssignment.Loggers
             }
         }
 
-        public void LogSalesByModel(IOrderedEnumerable<KeyValuePair<string, decimal>> salesByModel)
+        public async Task LogSalesByModelAsync(IOrderedEnumerable<KeyValuePair<string, decimal>> salesByModel)
         {
             StreamWriter file = null;
             try
@@ -58,9 +58,9 @@ namespace MasterCardAssignment.Loggers
                 file.WriteLine("Model  Total Sales");
                 foreach (var item in salesByModel)
                 {
-                    file.WriteLine($"{item.Key}  ${item.Value:#,##0.00}");
+                   await file.WriteLineAsync($"{item.Key}  ${item.Value:#,##0.00}");
                 }
-                file.WriteLine(string.Empty);
+                await file.WriteLineAsync(string.Empty);
 
             }
             catch (Exception ex)
@@ -74,7 +74,7 @@ namespace MasterCardAssignment.Loggers
             }
         }
 
-        public void LogSalesByYearThenPrice(IEnumerable<OrderInfo> orderInfos)
+        public async Task LogSalesByYearThenPriceAsync(IEnumerable<OrderInfo> orderInfos)
         {
             StreamWriter file = null;
             try
@@ -83,9 +83,9 @@ namespace MasterCardAssignment.Loggers
                 file.WriteLine("Order Date Model Price");
                 foreach (var order in orderInfos ?? Enumerable.Empty<OrderInfo>())
                 {
-                    file.WriteLine($"{order.OrderDate.ToShortDateString()} {order.Model} ${order.Price.ToString("#,##0.00")}");
+                    await file.WriteLineAsync($"{order.OrderDate.ToShortDateString()} {order.Model} ${order.Price.ToString("#,##0.00")}");
                 }
-                file.WriteLine(string.Empty);
+                await file.WriteLineAsync(string.Empty);
             }
             catch (Exception ex)
             {

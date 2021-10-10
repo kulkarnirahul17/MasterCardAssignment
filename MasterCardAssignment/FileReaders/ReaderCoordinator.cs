@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using MasterCardAssignment.Loggers;
 using MasterCardAssignment.Models;
 
@@ -24,27 +26,28 @@ namespace MasterCardAssignment.FileReaders
         /// </summary>
         /// <returns>Aggregate list of merge order infos from multiple input sources</returns>
         /// <see cref="OrderInfo"/>
-        public IEnumerable<OrderInfo> AggregateInputFiles()
+        public async Task<IEnumerable<OrderInfo>> AggregateInputFilesAsync()
         {
             List<OrderInfo> orderInfos = new();
 
             string pipedFilePath = @"pipe.txt";
-            readFile(orderInfos, pipedFilePath, '|');
+            await readFile(orderInfos, pipedFilePath, '|');
 
             string spaceDelimitedFilePath = @"space.dat";
-            readFile(orderInfos, spaceDelimitedFilePath, ' ');
+            await readFile(orderInfos, spaceDelimitedFilePath, ' ');
 
             string csvFilePath = @"comma.csv";
-            readFile(orderInfos, csvFilePath, ',');                      
+            await readFile(orderInfos, csvFilePath, ',');                      
 
-            return orderInfos;
+            return orderInfos.AsEnumerable();
         }
 
-        private void readFile(List<OrderInfo> orderInfos, string filePath, char delimiter)
+        private async Task readFile(List<OrderInfo> orderInfos, string filePath, char delimiter)
         {
             try
-            {              
-                orderInfos.AddRange(_reader.ReadInput(filePath, delimiter));
+            {
+                var result = await _reader.ReadInputAsync(filePath, delimiter);
+                orderInfos.AddRange(result);
             }
             catch (Exception ex)
             {

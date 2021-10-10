@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoFixture;
 using MasterCardAssignment.FileReaders;
 using MasterCardAssignment.Loggers;
@@ -24,10 +25,10 @@ namespace MasterCardAssignmentTests
         }
 
         [Fact]
-        public void ItShouldThrowExceptionIfFileDoesNotExist()
+        public async Task ItShouldThrowExceptionIfFileDoesNotExist()
         {            
             var fileName = _fixture.Create<string>();
-            var exception = Assert.Throws<FileNotFoundException>(() => _reader.ReadInput(fileName, ';'));
+            var exception = await Assert.ThrowsAsync<FileNotFoundException>(() => _reader.ReadInputAsync(fileName, ';'));
             exception.Message.ShouldContain(fileName);         
         }
 
@@ -35,16 +36,16 @@ namespace MasterCardAssignmentTests
         public void ItShouldLogException()
         {
             var fileName = _fixture.Create<string>();
-            Assert.Throws<FileNotFoundException>(() => _reader.ReadInput(fileName, ';'));
+            Assert.ThrowsAsync<FileNotFoundException>(() => _reader.ReadInputAsync(fileName, ';'));
             _exceptionLoggerMock.Verify(x => x.LogException(It.IsAny<FileNotFoundException>()), Times.Once);
         }
 
         [Fact]
         [Trait("Category", "Integration Tests")]
-        public void ItShouldReadOrdersSuccessfully()
+        public async Task ItShouldReadOrdersSuccessfully()
         {
             var fileName = _fixture.Create<string>();
-            var result = _reader.ReadInput("comma.csv", ',');
+            var result = await _reader.ReadInputAsync("comma.csv", ',');
             result.ShouldNotBeNull();
             result.Count().ShouldBe(4);
         }

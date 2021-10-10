@@ -17,9 +17,9 @@ namespace MasterCardAssignment
             IOrderResultsBusiness business = new OrderResultsBusiness();
 
             IOrderMerger orderMerger = new OrderMerger(readerCoordinator, logger, business);
-            
 
-            orderMerger.ReadAndMergeOrders();
+            //For now it is synchronous wait but the underlying code in other layers is awaitable for future extension
+            orderMerger.ReadAndMergeOrdersAsync().Wait();
 
             Console.WriteLine("Successfully written the output to output.txt");
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using MasterCardAssignment.Loggers;
 using MasterCardAssignment.Models;
 
@@ -24,7 +25,7 @@ namespace MasterCardAssignment.FileReaders
         /// <param name="filePath">The file containing input orders</param>
         /// <param name="delimiter">The delimter format of the file</param>
         /// <returns>An enumerable list of orders read from the file represented by <see cref="OrderInfo"/></returns>
-        public IEnumerable<OrderInfo> ReadInput(string filePath, char delimiter)
+        public async Task<IEnumerable<OrderInfo>> ReadInputAsync(string filePath, char delimiter)
         {
             List<OrderInfo> orderInfos = new();
 
@@ -38,7 +39,7 @@ namespace MasterCardAssignment.FileReaders
 
                 using (StreamReader file = new(fullPath))
                 {
-                    while ((line = file.ReadLine()) != null)
+                    while ((line = await file.ReadLineAsync()) != null)
                     {
                         //Other ways of reading are through TextFieldParser where a delimiter can be set
                         //But for this solution, we can skip the headers line

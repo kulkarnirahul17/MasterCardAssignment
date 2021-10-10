@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+
 namespace MasterCardAssignment.Business
 {
     /// <summary>
@@ -9,6 +11,6 @@ namespace MasterCardAssignment.Business
         /// <summary>
         /// Reads the orders from the input data sources and logs the merged results to output 
         /// </summary>
-        void ReadAndMergeOrders();
+        Task ReadAndMergeOrdersAsync();
     }
 }

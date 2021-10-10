@@ -27,7 +27,7 @@ namespace MasterCardAssignmentTests
         public void ShouldOrderShouldThrowArgumentNullExceptionWhenOrderInfoIsNull()
         {
             _orderInfos = null;
-            Assert.Throws<ArgumentNullException>(() => _logger.LogOrders(null));
+            Assert.ThrowsAsync<ArgumentNullException>(() => _logger.LogOrdersAsync(null));
         }    
     }
 }
